@@ -6,8 +6,11 @@ import { getAllFilesPathById } from "./file";
 import path from "path";
 import { uploadFile } from "./aws";
 import { createClient } from "redis";
+
 const publisher = createClient();
+const subscriber = createClient();
 publisher.connect();
+subscriber.connect();
 
 const app = express();
 app.use(cors());
@@ -28,8 +31,17 @@ app.post("/deploy", async (req, res) => {
   });
 
   publisher.lPush("build-queue", id);
+  publisher.hSet("status", id, "uploaded");
 
   res.json({ id: id });
+});
+
+app.get("/status", async (req, res) => {
+  const id = req.query.id;
+  const response = await subscriber.hGet("status", id as string);
+  res.json({
+    status: response,
+  });
 });
 
 app.listen(3000, () => {
