@@ -1,9 +1,24 @@
 import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "./ui/card"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
-import { Button } from "./ui/button"
+import { Button } from "./ui/button";
+import { useState } from "react";
+import axios from 'axios';
+
+const BACKEND_UPLOAD_URL = "http://localhost:3000";
 
 export function Landing() {
+    const [repoUrl, setRepoUrl]  = useState("");
+    const [uploadId, setUploadId] = useState("");
+    const [uploading, setUploading] = useState(false);
+    const [deployed, setDeployed] = useState(false);
+
+    const upload = async() => {
+        setUploading(true);
+
+
+    }
+
 
     return (
         <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
@@ -17,7 +32,6 @@ export function Landing() {
                         <div className="space-y-2">
                             <Label htmlFor="github-url">Github Repository</Label>
                             <Input placeholder="https://github.com/username/repo" />
-
                         </div>
                         <Button className="w-full" type="submit">Upload</Button>
                     </div>
